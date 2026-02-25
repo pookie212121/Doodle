@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOODLE CO – Ultimate 🚀</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:black;
+overflow:hidden;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+perspective:1200px;
+}
+
+/* Galaxy */
+body::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background:
+radial-gradient(circle at 20% 30%, #ff00cc, transparent 40%),
+radial-gradient(circle at 70% 60%, #00ffff, transparent 40%),
+radial-gradient(circle at 50% 50%, #3333ff, transparent 60%);
+animation:rotateGalaxy 60s linear infinite;
+z-index:-3;
+}
+@keyframes rotateGalaxy{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+/* Container */
+.container{
+display:flex;
+flex-wrap:wrap;
+gap:40px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(25px);
+padding:25px;
+border-radius:25px;
+box-shadow:0 0 50px #00ffff;
+}
+
+/* Sticker */
+#sticker{
+width:300px;
+height:300px;
+background:white;
+border-radius:20px;
+position:relative;
+overflow:hidden;
+transform-style:preserve-3d;
+transition:0.2s;
+}
+
+#sticker img{
+width:100%;
+height:100%;
+object-fit:cover;
+position:absolute;
+}
+
+.text{
+position:absolute;
+font-size:30px;
+font-weight:bold;
+color:white;
+text-shadow:2px 2px 10px black;
+cursor:move;
+}
+
+/* Controls */
+.controls{
+min-width:250px;
+}
+
+input,button,select{
+width:100%;
+margin-bottom:10px;
+padding:10px;
+border-radius:10px;
+border:none;
+}
+
+input{
+background:rgba(255,255,255,0.2);
+color:white;
+}
+
+button{
+background:linear-gradient(45deg,#00ffff,#ff00cc);
+color:white;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 20px #00ffff;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 35px #ff00cc;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div id="sticker">
+<img id="previewImg">
+<div id="topDisplay" class="text" style="top:10px;left:20px;">TOP</div>
+<div id="bottomDisplay" class="text" style="bottom:10px;left:20px;">BOTTOM</div>
+</div>
+
+<div class="controls">
+<h2>DOODLE CO 🚀 Ultimate</h2>
+
+<input type="file" id="imgUpload">
+<input type="text" id="topText" placeholder="Top Text">
+<input type="text" id="bottomText" placeholder="Bottom Text">
+
+<label>Text Color</label>
+<input type="color" id="textColor" value="#ffffff">
+
+<label>Font Size</label>
+<input type="range" id="fontSize" min="20" max="60" value="30">
+
+<label>Rotate</label>
+<input type="range" id="rotate" min="-180" max="180" value="0">
+
+<label>Opacity</label>
+<input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1">
+
+<label>Quality</label>
+<select id="quality">
+<option value="1">Normal</option>
+<option value="2">HD</option>
+<option value="4">Ultra HD</option>
+</select>
+
+<label>
+<input type="checkbox" id="premium"> Premium (No Watermark ₹20)
+</label>
+
+<button onclick="downloadSticker()">Download ₹10</button>
+<button onclick="downloadPack()">5 Pack ₹40</button>
+<button onclick="orderWhatsApp()">Order Custom 📲</button>
+
+</div>
+
+</div>
+
+<script>
+
+const sticker=document.getElementById("sticker");
+const imgUpload=document.getElementById("imgUpload");
+const previewImg=document.getElementById("previewImg");
+const topDisplay=document.getElementById("topDisplay");
+const bottomDisplay=document.getElementById("bottomDisplay");
+
+/* Upload */
+imgUpload.addEventListener("change",e=>{
+const reader=new FileReader();
+reader.onload=event=>previewImg.src=event.target.result;
+reader.readAsDataURL(e.target.files[0]);
+});
+
+/* Text */
+document.getElementById("topText").oninput=e=>topDisplay.innerText=e.target.value;
+document.getElementById("bottomText").oninput=e=>bottomDisplay.innerText=e.target.value;
+
+/* Color */
+document.getElementById("textColor").oninput=e=>{
+topDisplay.style.color=e.target.value;
+bottomDisplay.style.color=e.target.value;
+};
+
+/* Font Size */
+document.getElementById("fontSize").oninput=e=>{
+topDisplay.style.fontSize=e.target.value+"px";
+bottomDisplay.style.fontSize=e.target.value+"px";
+};
+
+/* Rotate */
+document.getElementById("rotate").oninput=e=>{
+topDisplay.style.transform="rotate("+e.target.value+"deg)";
+bottomDisplay.style.transform="rotate("+e.target.value+"deg)";
+};
+
+/* Opacity */
+document.getElementById("opacity").oninput=e=>{
+topDisplay.style.opacity=e.target.value;
+bottomDisplay.style.opacity=e.target.value;
+};
+
+/* Drag */
+function makeDraggable(el){
+let isDown=false,offsetX,offsetY;
+el.addEventListener("touchstart",e=>{
+isDown=true;
+offsetX=e.touches[0].clientX-el.offsetLeft;
+offsetY=e.touches[0].clientY-el.offsetTop;
+});
+document.addEventListener("touchmove",e=>{
+if(!isDown)return;
+el.style.left=(e.touches[0].clientX-offsetX)+"px";
+el.style.top=(e.touches[0].clientY-offsetY)+"px";
+});
+document.addEventListener("touchend",()=>isDown=false);
+}
+makeDraggable(topDisplay);
+makeDraggable(bottomDisplay);
+
+/* Download */
+function downloadSticker(){
+let premium=document.getElementById("premium").checked;
+let wm;
+
+if(!premium){
+wm=document.createElement("div");
+wm.innerText="DOODLE CO";
+wm.style.position="absolute";
+wm.style.bottom="5px";
+wm.style.right="10px";
+wm.style.fontSize="12px";
+wm.style.color="black";
+sticker.appendChild(wm);
+}
+
+html2canvas(sticker,{scale:document.getElementById("quality").value})
+.then(canvas=>{
+let link=document.createElement("a");
+link.download="doodleco_"+Date.now()+".png";
+link.href=canvas.toDataURL();
+link.click();
+if(wm) sticker.removeChild(wm);
+});
+}
+
+function downloadPack(){
+for(let i=0;i<5;i++) downloadSticker();
+}
+
+function orderWhatsApp(){
+let message="Hi DOODLE CO 🚀 I want a custom sticker 😎";
+window.open("https://wa.me/918400129505?text="+encodeURIComponent(message));
+}
+
+</script>
+</body>
+</html>
